@@ -7,10 +7,10 @@ namespace Clase1
     {
         public float movementSpeed = 0.01f;
         [SerializeField] private KeyCode keyUp = KeyCode.W;
-        [SerializeField] private KeyCode keyLeft = KeyCode.A;
+        //[SerializeField] private KeyCode keyLeft = KeyCode.A;
         [SerializeField] private KeyCode keyDown = KeyCode.S;
-        [SerializeField] private KeyCode keyRight = KeyCode.D;
-        [SerializeField] private float rotation = 10f;
+        //[SerializeField] private KeyCode keyRight = KeyCode.D;
+        //[SerializeField] private float rotation = 10f;
 
          void Update()
          { 
@@ -19,35 +19,35 @@ namespace Clase1
 
              if (Input.GetKey(keyUp)) 
             {
-                pos.y += movementSpeed;
+                pos.y += movementSpeed * Time.deltaTime;
 
                 Debug.Log("W");
             }
 
-            if (Input.GetKey(keyLeft))
+           /* if (Input.GetKey(keyLeft))
             {
                 pos.x -= movementSpeed;
 
                 Debug.Log("A");
-            }
+            } */
 
             if (Input.GetKey(keyDown))
             {
-                pos.y -= movementSpeed;
+                pos.y -= movementSpeed * Time.deltaTime;
             
                 Debug.Log("S");
             }
 
-            if (Input.GetKey(keyRight))
+           /* if (Input.GetKey(keyRight))
             {
                 pos.x += movementSpeed;
 
                 Debug.Log("D");
-            }
+            } */
 
                  transform.position = pos;
        
-            if (Input.GetKeyDown(KeyCode.Q))
+           /* if (Input.GetKeyDown(KeyCode.Q))
             {
                 transform.Rotate(Vector3.forward, rotation);
 
@@ -59,13 +59,13 @@ namespace Clase1
                 transform.Rotate(Vector3.forward, -rotation);
 
                 Debug.Log("E");
-            }
+            } */
 
          }
 
         public void setMovementSpeed(float newSpeed)
         {
-            if (newSpeed > 1)
+            if (newSpeed > 11)
                 return;
             movementSpeed += newSpeed;
         }

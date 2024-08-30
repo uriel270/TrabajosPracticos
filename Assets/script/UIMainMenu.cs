@@ -30,8 +30,8 @@ public class NewBehaviourScript : MonoBehaviour
         ExitButton.onClick.AddListener(OnExitButtonClicked);
         BackButtonSettings.onClick.AddListener(OnBackButtonClicked);
         BackButtonCredits.onClick.AddListener(OnBackButtonClicked);
-        speedSliderPlayer1.onValueChanged.AddListener(OnspeedSliderPlayer1Changed);
-        speedSliderPlayer2.onValueChanged.AddListener(OnspeedSliderPlayer1Changed);
+        speedSliderPlayer1.onValueChanged.AddListener(value => OnSpeedSliderChanged(value, player1, speedTextPlayer1));
+        speedSliderPlayer2.onValueChanged.AddListener(value => OnSpeedSliderChanged(value, player2, speedTextPlayer2));
     }
 
     private void Update()
@@ -61,65 +61,71 @@ public class NewBehaviourScript : MonoBehaviour
         speedSliderPlayer2.onValueChanged.RemoveAllListeners();
     }
 
-    [SerializeField] private void Resume()
-                     {
-                         pauseMenuUI.SetActive(false);
-                         settingsPanel.SetActive(false);
-                         CreditsPanel.SetActive(false);
-                         isPaused = false;
-                     }
+    private void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        settingsPanel.SetActive(false);
+        CreditsPanel.SetActive(false);
+        Time.timeScale = 1f;  // Reanuda el juego
+        isPaused = false;
+    }
 
-    void Pause()
+    private void Pause()
     {
         pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;  // Pausa el juego
         isPaused = true;
+    }
+
+    private void SetActivePanel(GameObject panel)
+    {
+        pauseMenuUI.SetActive(false);
+        settingsPanel.SetActive(false);
+        CreditsPanel.SetActive(false);
+        panel.SetActive(true);
     }
 
     private void OnPlayButtonClicked()
     {
-        pauseMenuUI.SetActive(false);
-
+        Resume();  // Cierra el menú y reanuda el juego
     }
 
     private void OnSettingsButtonClicked()
     {
-        settingsPanel.SetActive(true);
-        pauseMenuUI.SetActive(false);
+        SetActivePanel(settingsPanel);
+        Time.timeScale = 0f;  // Mantiene el juego en pausa
     }
 
     private void OnCreditsButtonClicked()
     {
-        CreditsPanel.SetActive(true);
-        pauseMenuUI.SetActive(false);
+        SetActivePanel(CreditsPanel);
+        Time.timeScale = 0f;  // Mantiene el juego en pausa
     }
 
     public void OnBackButtonClicked()
     {
-        settingsPanel.SetActive(false);
-        CreditsPanel.SetActive(false);
-        pauseMenuUI.SetActive(true);
+        SetPauseMenuActive(true);
     }
 
     public void OnExitButtonClicked()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
-        Application.Quit(); // Cierra el juego en la versión final
-        #endif
+#else
+        Application.Quit();
+#endif
     }
 
-    private void OnspeedSliderPlayer1Changed(float newSpeed)
+    private void OnSpeedSliderChanged(float newSpeed, Movement player, Text speedText)
     {
-        player1.movementSpeed = newSpeed;
-            speedTextPlayer1.text = newSpeed.ToString("");
-        
+        player.movementSpeed = newSpeed;
+        speedText.text = "Speed: " + newSpeed.ToString("F2");
     }
 
-    private void OnspeedSliderPlayer2Changed(float newSpeed)
+    private void SetPauseMenuActive(bool isActive)
     {
-        player2.movementSpeed = newSpeed;
-        speedTextPlayer2.text = newSpeed.ToString("");
-
+        pauseMenuUI.SetActive(isActive);
+        settingsPanel.SetActive(false);
+        CreditsPanel.SetActive(false);
     }
 }
